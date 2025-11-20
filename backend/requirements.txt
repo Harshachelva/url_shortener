@@ -1,0 +1,19 @@
+# Web Framework
+Flask>=2.3.0
+gunicorn # Recommended for production deployment with Flask
+
+# Database Driver
+# Note: sqlite3 is built into Python, but we list Flask dependencies
+
+# Redis and Caching
+redis>=4.5.1
+
+# Retry Mechanism
+tenacity>=8.2.3
+
+# URL Hashing/Manipulation
+# (Though you switched to random codes, hashlib is still useful)
+# No external package needed for hashlib, but keeping it here for context
+
+# Request Handling (usually included with Flask)
+# requests

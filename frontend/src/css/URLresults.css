@@ -1,0 +1,16 @@
+/* URLResults Component */
+
+.url-results h3 {
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+  color: #222;
+}
+
+.url-results p {
+  font-size: 0.95rem;
+  background: #f0f0f0;
+  padding: 0.6rem 0.8rem;
+  border-radius: 6px;
+  margin-bottom: 1rem;
+  word-break: break-all;
+}

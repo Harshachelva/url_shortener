@@ -1,0 +1,63 @@
+version: '3.8'
+
+services:
+  # 1. Flask Backend Service
+  api:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.api
+    container_name: flask-api
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./backend:/app
+      - db_data:/app/data
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - DB_PATH=/app/data/shortener.db
+    depends_on:
+      - redis
+      - db_builder
+
+  # 2. React Frontend Service
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.web
+    container_name: react-app
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules # Important: Prevents host node_modules from overwriting container's
+    environment:
+      # Tell the React app where the API is running (use the host IP if running locally)
+      # For simplicity during development, you'll often proxy this in package.json
+      - REACT_APP_API_URL=http://localhost:5000
+    depends_on: 
+      - api
+
+  # 3. Redis Cache/Counter Service
+  redis:
+    image: redis:7-alpine
+    container_name: redis-server
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+
+  # 4. SQLite DB Builder Service (Ensures a stable place for the DB file)
+  db_builder:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.api
+    container_name: sqlite-builder
+    command: python /app/init_db.py
+    volumes:
+      - ./backend:/app
+      - db_data:/app/data
+    profiles: ["setup"]
+
+volumes:
+  db_data: # Holds the shortener.db file
+  redis_data: # Holds Redis persisted data

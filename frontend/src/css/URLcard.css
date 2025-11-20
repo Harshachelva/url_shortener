@@ -1,0 +1,42 @@
+/* URLCard Component */
+
+.URL-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.url-field,
+.short-url-input-field {
+  display: flex;
+  flex-direction: column;
+}
+
+.URL-form input {
+  padding: 0.7rem 1rem;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  outline: none;
+  transition: border 0.2s ease;
+}
+
+.URL-form input:focus {
+  border-color: #0077ff;
+  box-shadow: 0 0 0 3px rgba(0, 119, 255, 0.2);
+}
+
+.submit-button {
+  padding: 0.8rem 1.2rem;
+  font-size: 1.1rem;
+  border: none;
+  background: #0077ff;
+  color: white;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.submit-button:hover {
+  background: #005fcc;
+}
