@@ -1,5 +1,6 @@
 # Web Framework
 Flask>=2.3.0
+flask_cors
 gunicorn # Recommended for production deployment with Flask
 
 # Database Driver

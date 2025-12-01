@@ -1,25 +1,30 @@
-version: '3.8'
-
 services:
-  # 1. Flask Backend Service
+  # Flask Backend Service
   api:
     build:
       context: ./backend
       dockerfile: Dockerfile.api
     container_name: flask-api
     ports:
-      - "5000:5000"
+      - "5001:5000"
     volumes:
       - ./backend:/app
       - db_data:/app/data
+    environment:
       - REDIS_HOST=redis
       - REDIS_PORT=6379
       - DB_PATH=/app/data/shortener.db
+      - FLASK_ENV=development
     depends_on:
-      - redis
-      - db_builder
+      redis:
+        condition: service_healthy
+      db_builder:
+        condition: service_completed_successfully
+    restart: unless-stopped
+    networks:
+      - app-network
 
-  # 2. React Frontend Service
+  # React Frontend Service
   frontend:
     build:
       context: ./frontend
@@ -29,15 +34,20 @@ services:
       - "3000:3000"
     volumes:
       - ./frontend:/app
-      - /app/node_modules # Important: Prevents host node_modules from overwriting container's
+      - /app/node_modules
     environment:
-      # Tell the React app where the API is running (use the host IP if running locally)
-      # For simplicity during development, you'll often proxy this in package.json
       - REACT_APP_API_URL=http://localhost:5000
-    depends_on: 
+      - CHOKIDAR_USEPOLLING=true
+      - WDS_SOCKET_PORT=3000
+    depends_on:
       - api
+    stdin_open: true
+    tty: true
+    restart: unless-stopped
+    networks:
+      - app-network
 
-  # 3. Redis Cache/Counter Service
+  # Redis Cache/Counter Service
   redis:
     image: redis:7-alpine
     container_name: redis-server
@@ -45,8 +55,18 @@ services:
       - "6379:6379"
     volumes:
       - redis_data:/data
+    command: redis-server --appendonly yes --appendfsync everysec
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+      start_period: 5s
+    restart: unless-stopped
+    networks:
+      - app-network
 
-  # 4. SQLite DB Builder Service (Ensures a stable place for the DB file)
+  # SQLite DB Initialization Service
   db_builder:
     build:
       context: ./backend
@@ -56,8 +76,17 @@ services:
     volumes:
       - ./backend:/app
       - db_data:/app/data
-    profiles: ["setup"]
+    environment:
+      - DB_PATH=/app/data/shortener.db
+    networks:
+      - app-network
 
 volumes:
-  db_data: # Holds the shortener.db file
-  redis_data: # Holds Redis persisted data
+  db_data:
+    driver: local
+  redis_data:
+    driver: local
+
+networks:
+  app-network:
+    driver: bridge
