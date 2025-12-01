@@ -1,0 +1,96 @@
+{
+  "info": {
+    "name": "URL Shortener API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Health Check",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:5000/health",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "5000",
+          "path": ["health"]
+        }
+      }
+    },
+    {
+      "name": "Shorten URL (Auto)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"url\": \"https://www.google.com\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:5000/shorten",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "5000",
+          "path": ["shorten"]
+        }
+      }
+    },
+    {
+      "name": "Shorten URL (Custom)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"url\": \"https://www.youtube.com\",\n  \"custom_code\": \"my-youtube\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:5000/shorten",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "5000",
+          "path": ["shorten"]
+        }
+      }
+    },
+    {
+      "name": "Get URL Stats",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:5000/stats/1",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "5000",
+          "path": ["stats", "1"]
+        }
+      }
+    },
+    {
+      "name": "Redirect Test",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:5000/1",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "5000",
+          "path": ["1"]
+        }
+      }
+    }
+  ]
+}

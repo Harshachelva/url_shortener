@@ -45,12 +45,11 @@ status:
 
 test-api:
 	@echo "Testing API health..."
-	@curl -s http://localhost:5000/health | python -m json.tool
+	@curl -s http://localhost:5000/health | python3 -m json.tool
 	@echo "\nTesting URL shortening..."
 	@curl -s -X POST http://localhost:5000/shorten \
 		-H "Content-Type: application/json" \
-		-d '{"url": "https://www.example.com/very-long-url"}' | python -m json.tool
-
+		-d '{"url": "https://www.example.com/very-long-url"}' | python3 -m json.tool
 shell-api:
 	docker exec -it flask-api /bin/bash
 
